@@ -1,0 +1,24 @@
+{
+  "kind": "custom_token",
+  "token": {
+    "contract": "WorldToken",
+    "name": "World multichain token",
+    "symbol": "WORLD",
+    "decimals": 18,
+    "constructorArgs": [],
+    "totalSupply": "1000000000000000000000000000"
+  },
+  "contracts": [],
+  "pool": {
+    "pairedCurrency": "0xd34a99bc0f67ae1bbd63c660e6d0b0dd03e263b7",
+    "fee": 12500,
+    "tickSpacing": 60,
+    "initialPrice": "79228162514264337593543950336"
+  },
+  "economics": {
+    "poolBps": 8000,
+    "initialMarketCapWei": "4500000000000000000000",
+    "remainderTo": "0x0f44a55663e888bb63618a0c31b68cbc6c01aa71"
+  },
+  "notes": "WorldToken is a fixed-supply ERC-20 with no constructor arguments. Its constructor mints the entire 1,000,000,000 WORLD supply with 18 decimals once to msg.sender. It has no owner, additional minting or transfer fees. No application contracts are deployed. The recorded initialPrice is provenance only; the opening price is derived from the initial market cap and total supply."
+}
