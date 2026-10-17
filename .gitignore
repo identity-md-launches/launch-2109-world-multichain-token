@@ -1,0 +1,27 @@
+# Foundry build output
+out/
+cache/
+broadcast/
+
+# Scratch space for local checks (never submitted)
+test/scratch/
+
+# Local environment and editor files
+.env
+.env.*
+.idea
+.vscode
+.DS_Store
+
+# Shell and tool configuration that is not part of the project
+.bash_profile
+.bashrc
+.profile
+.zprofile
+.zshrc
+.gitconfig
+.gitmodules
+.ripgreprc
+.mcp.json
+.claude/
+.imd/
