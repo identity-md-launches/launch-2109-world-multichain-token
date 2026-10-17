@@ -17,6 +17,7 @@ contract FactoryProbe {
 /// @notice A holder that never receives tokens unless the test moves some to it.
 contract HolderProbe {}
 
+/// forge-config: default.fuzz.runs = 1000
 contract WorldTokenTest is Test {
     uint256 internal constant EXPECTED_SUPPLY = 1_000_000_000 ether;
 
@@ -267,7 +268,22 @@ contract WorldTokenTest is Test {
         ];
         address[2] memory callers = [attacker, deployer];
         for (uint256 i = 0; i < signatures.length; i++) {
-            bytes memory data = abi.encodeWithSignature(signatures[i], alice, type(uint128).max);
+            // Use valid ABI arguments: an invalid bool would revert in the decoder even if
+            // a privileged function existed, hiding the very surface this test probes.
+            bytes memory data;
+            if (i == 2 || i == 8 || i == 10 || i == 18) {
+                data = abi.encodeWithSignature(signatures[i]);
+            } else if (i == 1 || i == 3) {
+                data = abi.encodeWithSignature(signatures[i], uint256(1));
+            } else if (i == 15 || i == 16) {
+                data = abi.encodeWithSignature(signatures[i], alice, true);
+            } else if (i == 19) {
+                data = abi.encodeWithSignature(signatures[i], false);
+            } else if (i == 0 || i == 20) {
+                data = abi.encodeWithSignature(signatures[i], alice, uint256(1));
+            } else {
+                data = abi.encodeWithSignature(signatures[i], alice);
+            }
             for (uint256 c = 0; c < callers.length; c++) {
                 vm.prank(callers[c]);
                 (bool ok,) = address(token).call(data);
@@ -317,7 +333,7 @@ contract WorldTokenTest is Test {
     // ---------------------------------------------------------------- fuzz and invariants
 
     function testFuzz_transferConservesSupply(address to, uint256 amount) public {
-        vm.assume(to != address(0));
+        to = address(uint160(bound(uint256(uint160(to)), 1, type(uint160).max)));
         amount = bound(amount, 0, EXPECTED_SUPPLY);
         vm.prank(deployer);
         assertTrue(token.transfer(to, amount));
